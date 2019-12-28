@@ -55,6 +55,18 @@ class Application(tk.Frame):
         self.i_3.insert(10, "15")
         self.i_3.pack(side="top")
 
+
+      
+        self.l_lb = tk.Label(self.master, text="Features to randomize:")
+        self.l_lb.pack(side="top")
+
+        self.lb = tk.Listbox(selectmode=tk.EXTENDED)
+        self.lb.insert(tk.END,"box") #box size
+        self.lb.insert(tk.END,"mass") #mass value
+        self.lb.insert(tk.END,"inertia") #inertia i__
+        self.lb.insert(tk.END,"contact_coefficients") #contact_coefficients mu
+        self.lb.pack(side="top")
+
         self.quit = tk.Button(self, text="QUIT", fg="red",
                               command=self.master.destroy)
         self.quit.pack(side="bottom")
@@ -80,7 +92,7 @@ class Application(tk.Frame):
         # load xml into string
         self.xml_string = open(self.urdf_master).read()
         # display
-        self.urdf_tree = XML_Viwer(root, self.xml_string, heading_text="Original").pack(side="left")
+        self.urdf_tree = XML_Viwer(root, self.xml_string, heading_text="Original").pack(fill="x")
     
     def get_urdf_extent_file(self):
         if DEBUG:
@@ -94,7 +106,7 @@ class Application(tk.Frame):
         # load xml into string
         self.xml_extent_string = open(self.urdf_extent_master).read()
         # display
-        self.urdf_extent_tree = XML_Viwer(root, self.xml_extent_string, heading_text="Extent").pack(side="right")
+        self.urdf_extent_tree = XML_Viwer(root, self.xml_extent_string, heading_text="Extent").pack(fill="x")#side="right")
 
     def get_save_directory(self):
         if DEBUG:
@@ -111,14 +123,75 @@ class Application(tk.Frame):
 
     def generate(self):
         # print(self.urdf_tree._element_tree)
+        selected_i = self.lb.curselection()
+        # print(selected_i)
+        r_tags = []
+        for i in selected_i:
+            # print(i)
+            r_tags.append(self.lb.get(i))
+            # print("t")
+        print(r_tags)
+
         tree = ET.parse(self.urdf_master)
         root = tree.getroot()
         print(root.tag)
         print(root.attrib)
+        idx = [0,0,0,0]
         for child in root:
             print(child.tag)
             print(child.attrib)
             print(len(child))
+            if child.tag == "link":
+                print("LINK")
+
+                # read stuff
+                idx[1] = 0
+                for ch in child:
+                    print(ch.tag)
+                    print(ch.attrib)
+                    print(len(ch))
+                    if ch.tag == "visual":
+                        print("VIS")
+                        idx[2] = 0
+                        for c in ch:
+                            print(c.tag)
+                            print(c.attrib)
+                            print(len(c))
+                            if c.tag == "geometry":
+                                idx[3] = 0
+                                for a in c:
+                                    print("GEOM")
+                                    print(a.tag)
+                                    print(a.attrib)
+                                    print([child,ch,c,a])
+                                    print(idx)
+                                    # print(root[idx[0]][idx[1]][idx[2]][idx[3]].text)
+                                    print(root[0])
+                                    print(root[0][idx[0]][idx[1]][idx[2]][idx[3]].text)
+                                    print("tt")
+                                    idx[3] += 1
+
+                            idx[2] += 1
+                                
+                    if ch.tag == "collision":
+                        pass
+                    if ch.tag == "inertial":
+                        pass
+                                    
+                            
+                    idx[1] += 1
+            idx[0] += 1
+                # # set stuff
+                # for ch in child:
+                #     print(ch.tag)
+                #     print(ch.attrib)
+                #     print(len(ch))
+                #     if ch == "visual":
+                #         pass
+                #     if ch == "collision":
+                #         pass
+                #     if ch == "inertial":
+                #         pass
         mean = 5
         std = 1
         print(np.random.normal(mean,std,int(self.num_generations)))
