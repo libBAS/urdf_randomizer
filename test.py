@@ -1,7 +1,10 @@
 import tkinter as tk
 import tkinter.filedialog as filedialog
+from tkinter.ttk import *
 
 from xml_viewer import XML_Viwer
+import xml.etree.ElementTree as ET
+import numpy as np
 
 DEBUG  = True
 class Application(tk.Frame):
@@ -14,6 +17,13 @@ class Application(tk.Frame):
 
 
     def create_widgets(self):
+        self.winfo_toplevel().title("URDF Generator")
+
+        self.b_0 = tk.Button(self)
+        self.b_0["text"] = "Select extent URDF"
+        self.b_0["command"] = self.get_urdf_extent_file
+        self.b_0.pack(side="top")
+
         self.b_1 = tk.Button(self)
         self.b_1["text"] = "Select URDF"
         self.b_1["command"] = self.get_urdf_file
@@ -49,6 +59,15 @@ class Application(tk.Frame):
                               command=self.master.destroy)
         self.quit.pack(side="bottom")
 
+        self.b_4 = tk.Button(self, fg="green")
+        self.b_4["text"] = "Generate"
+        self.b_4["command"] = self.generate
+        self.b_4.pack(side="top")
+
+        self.progress = Progressbar(root, orient = tk.HORIZONTAL, 
+              length = 100, mode = 'determinate') 
+        self.progress.pack(side="bottom")
+
     def get_urdf_file(self):
         if DEBUG:
             root.filename = "example.xml"
@@ -63,39 +82,81 @@ class Application(tk.Frame):
         # display
         self.urdf_tree = XML_Viwer(root, self.xml_string, heading_text="Original").pack(side="left")
     
+    def get_urdf_extent_file(self):
+        if DEBUG:
+            root.filename = "example_extent.xml"
+        else:
+            root.filename =  filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("URDF files","*.xml"),("all files","*.*")))
+        self.urdf_extent_master = root.filename
+        self.l_1_v.set("Using extent URDF:\n" + self.urdf_extent_master + "\n")
+        print("Using extent URDF:\n" + self.urdf_extent_master + "\n")
+
+        # load xml into string
+        self.xml_extent_string = open(self.urdf_extent_master).read()
+        # display
+        self.urdf_extent_tree = XML_Viwer(root, self.xml_extent_string, heading_text="Extent").pack(side="right")
+
     def get_save_directory(self):
         if DEBUG:
             root.filename = "generated"
         else:
             root.filename =  filedialog.askdirectory()
         self.save_directory = root.filename
-        self.l_2_v.set("Saving generated URDFs to:\n" + self.save_directory + "\n")
-        print("Saving generated URDFs to:\n" + self.save_directory + "\n")
+        self.l_2_v.set("Will save generated URDFs to:\n" + self.save_directory + "\n")
+        print("Will save generated URDFs to:\n" + self.save_directory + "\n")
     
     def set_num_gens(self):
         self.num_generations = self.i_3.get()
         self.l_3_v.set("# of Generations: " + str(self.num_generations))
+
+    def generate(self):
+        # print(self.urdf_tree._element_tree)
+        tree = ET.parse(self.urdf_master)
+        root = tree.getroot()
+        print(root.tag)
+        print(root.attrib)
+        for child in root:
+            print(child.tag)
+            print(child.attrib)
+            print(len(child))
+        mean = 5
+        std = 1
+        print(np.random.normal(mean,std,int(self.num_generations)))
+
+        for i in range(int(self.num_generations)):
+            self.progress['value'] = (int(i)+1)/int(self.num_generations)*100
+
+            new_tree = ET.parse(self.urdf_master)
+            new_root = new_tree.getroot()
+
+            mean_tree = ET.parse(self.urdf_master)
+            mean_root = mean_tree.getroot()
+
+            std_tree = ET.parse(self.urdf_extent_master)
+            std_root = std_tree.getroot()
+
+            new_tree.write(self.save_directory + "/generated_" + str(i) + ".xml")
         
 
 root = tk.Tk()
 app = Application(master=root)
 
-xml = """
-<messages>
-    <note id="501">
-    <to>Tove</to>
-    <from>Jani</from>
-    <heading>Reminder</heading>
-    <body>Don't forget me this weekend!</body>
-    </note>
-    <note id="502">
-    <to>Jani</to>
-    <from>Tove</from>
-    <heading>Re: Reminder</heading>
-    <body>I will not</body>
-    </note>
-</messages>"""
+# xml = """
+# <messages>
+#     <note id="501">
+#     <to>Tove</to>
+#     <from>Jani</from>
+#     <heading>Reminder</heading>
+#     <body>Don't forget me this weekend!</body>
+#     </note>
+#     <note id="502">
+#     <to>Jani</to>
+#     <from>Tove</from>
+#     <heading>Re: Reminder</heading>
+#     <body>I will not</body>
+#     </note>
+# </messages>"""
 # XML_Viwer(root, xml, heading_text="Original").pack(side="left")
-XML_Viwer(root, xml, heading_text="Extent").pack(side="right")
+# XML_Viwer(root, xml, heading_text="Extent").pack(side="right")
 
 app.mainloop()
