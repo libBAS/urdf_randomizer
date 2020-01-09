@@ -129,51 +129,42 @@ class Application(tk.Frame):
         self.l_3_v.set("# of Generations: " + str(self.num_generations))
 
     def generate(self):
-        # Elist = []
-        idxs = []
-        strings = []
 
-        # print(self.urdf_tree._element_tree)
+        # observe what has been selected
         selected_i = self.lb.curselection()
-        # print(selected_i)
         r_tags = []
         for i in selected_i:
-            # print(i)
             r_tags.append(self.lb.get(i))
-            # print("t")
         print(r_tags)
 
+        # save read in data
+        idxs = []       # xml index
+        strings = []    # xml string (avg)
+        stringe = []    # xml string (extent)
+
+        # read in data - mean
         tree = ET.parse(self.urdf_master)
         root = tree.getroot()
-
         robot_name = str(root.attrib['name'])
         print("Robot Name = " + robot_name)
         idx = [0,0,0,0]
         for child in root:
-
             if child.tag == "joint":
-                print("JOINT")
                 idx[1] = 0
                 for joint in child:
                     idx[1] += 1
                     pass
-
             if child.tag == "link":
-                print("LINK")
                 idx[1] = 0
                 for link in child:
-
                     if link.tag == "inertial":
-                        print("INERT")
                         idx[2] = 0
                         for prop in link:
                             if prop.tag == "mass":
-                                print("MASS")
                                 idxs.append(list(idx))
                                 strings.append(root[idx[0]][idx[1]][idx[2]].attrib["value"])
                                 pass
                             if prop.tag == "inertia":
-                                print("INERTIA")
                                 idxs.append(list(idx))
                                 istring = \
                                 root[idx[0]][idx[1]][idx[2]].attrib["ixx"] + " " + \
@@ -186,46 +177,131 @@ class Application(tk.Frame):
                                 pass
                             idx[2] += 1
                     if link.tag == "visual":
-                        print("VIS")
                         pass
                     if link.tag == "collision":
-                        print("COL")
                         idx[2] = 0
                         for prop in link:
                             if prop.tag == "contact_coefficients":
-                                print("CONT COEF")
-                                print("Mu is " + str(prop.attrib["mu"]))
+                                # print("Mu is " + str(prop.attrib["mu"]))
                                 idxs.append(list(idx))
                                 strings.append(root[idx[0]][idx[1]][idx[2]].attrib["mu"])
                             if prop.tag == "geometry":
-                                print("GEOM")
                                 idx[3] = 0
                                 for value in prop:
                                     if value.tag == "box":
-                                        print("BOX")
                                         pass
                                     idxs.append(list(idx))
-                                    strings.append(root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"])
-
-                                    print()
-
-                                    
+                                    strings.append(root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"])                              
                                     idx[3] += 1
                             idx[2] += 1
                     idx[1] += 1
             idx[0] += 1
 
-        # print(len(Elist))
-        print(idxs)
-        for e in range(0, len(idxs)):
-            print(idxs[e])
-            print(strings[e])
+        # read in data - extent
+        tree = ET.parse(self.urdf_extent_master)
+        root = tree.getroot()
+        idx = [0,0,0,0]
+        for child in root:
+            if child.tag == "joint":
+                idx[1] = 0
+                for joint in child:
+                    idx[1] += 1
+                    pass
+            if child.tag == "link":
+                idx[1] = 0
+                for link in child:
+                    if link.tag == "inertial":
+                        idx[2] = 0
+                        for prop in link:
+                            if prop.tag == "mass":
+                                #idxs.append(list(idx))
+                                stringe.append(root[idx[0]][idx[1]][idx[2]].attrib["value"])
+                                pass
+                            if prop.tag == "inertia":
+                                #idxs.append(list(idx))
+                                istring = \
+                                root[idx[0]][idx[1]][idx[2]].attrib["ixx"] + " " + \
+                                root[idx[0]][idx[1]][idx[2]].attrib["ixy"] + " " + \
+                                root[idx[0]][idx[1]][idx[2]].attrib["ixz"] + " " + \
+                                root[idx[0]][idx[1]][idx[2]].attrib["iyy"] + " " + \
+                                root[idx[0]][idx[1]][idx[2]].attrib["iyz"] + " " + \
+                                root[idx[0]][idx[1]][idx[2]].attrib["izz"] + " "
+                                stringe.append(istring)
+                                pass
+                            idx[2] += 1
+                    if link.tag == "visual":
+                        pass
+                    if link.tag == "collision":
+                        idx[2] = 0
+                        for prop in link:
+                            if prop.tag == "contact_coefficients":
+                                # print("Mu is " + str(prop.attrib["mu"]))
+                                #idxs.append(list(idx))
+                                stringe.append(root[idx[0]][idx[1]][idx[2]].attrib["mu"])
+                            if prop.tag == "geometry":
+                                idx[3] = 0
+                                for value in prop:
+                                    if value.tag == "box":
+                                        pass
+                                    #idxs.append(list(idx))
+                                    stringe.append(root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"])                              
+                                    idx[3] += 1
+                            idx[2] += 1
+                    idx[1] += 1
+            idx[0] += 1
+
+        # # debugging
+        # print(idxs)
+        # print("lengs")
+        # print(len(idxs))
+        # print(len(stringe))
+        # print(len(strings))
+        # for e in range(0, len(idxs)):
+        #     print(idxs[e])
+        #     print(strings[e])
+        #     print(stringe[e])
             # print(e.vals)
 
-        mean = 5
-        std = 1
-        print(np.random.normal(mean,std,int(self.num_generations)))
+        # generate random values
+        
+        gen_vals = []
+        for e in range(0, len(idxs)):
+            
+            mean_s = strings[e]
+            std_s = stringe[e]
 
+            mean_s = mean_s.split()
+            std_s =  std_s.split()
+
+            # gen
+            rval_s = []
+            for s in range(0, len(mean_s)):
+                mean = float(mean_s[s])
+                std = float(std_s[s])
+                rval_list = np.random.normal(mean,std,int(self.num_generations))
+                rval_s.append(rval_list)
+
+            # rearrange
+            rvals = []
+            for i in range(0,int(self.num_generations)):
+                full_string = ""
+                for ii in range(0, len(rval_s)):
+                    st = str(rval_s[ii][i])
+                    full_string = full_string + " " + st
+                rvals.append(full_string)
+            gen_vals.append(rvals)
+
+        # # debugging
+        print("E")
+        print(len(gen_vals))
+        # print(len(rvals))
+        # for de in gen_vals:
+        #     print(len(de))
+        #     for eee in de:
+        #         print(len(eee.split()))
+        # print(gen_vals)
+
+        # save generated values to tree
         for i in range(int(self.num_generations)):
             self.progress['value'] = (int(i)+1)/int(self.num_generations)*100
 
@@ -238,28 +314,19 @@ class Application(tk.Frame):
             std_tree = ET.parse(self.urdf_extent_master)
             std_root = std_tree.getroot()
 
+            # edit new_tree
+            print("TEST")
+            for idxx in range(0, len(idxs)):
+                idx = idxs[idxx]
+                print(idx)
+                try:
+                    print(new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib)
+                except:
+                    print(new_root[idx[0]][idx[1]][idx[2]].attrib)
+                print(gen_vals[idxx][i])
             new_tree.write(self.save_directory + "/generated_" + str(i) + ".xml")
-        
-
+        print("Finished")
+# run app
 root = tk.Tk()
 app = Application(master=root)
-
-# xml = """
-# <messages>
-#     <note id="501">
-#     <to>Tove</to>
-#     <from>Jani</from>
-#     <heading>Reminder</heading>
-#     <body>Don't forget me this weekend!</body>
-#     </note>
-#     <note id="502">
-#     <to>Jani</to>
-#     <from>Tove</from>
-#     <heading>Re: Reminder</heading>
-#     <body>I will not</body>
-#     </note>
-# </messages>"""
-# XML_Viwer(root, xml, heading_text="Original").pack(side="left")
-# XML_Viwer(root, xml, heading_text="Extent").pack(side="right")
-
 app.mainloop()
