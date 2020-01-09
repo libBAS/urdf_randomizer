@@ -346,15 +346,15 @@ class Application(tk.Frame):
                     new_root[idx[0]][idx[1]][idx[2]].attrib["iyz"] = gval[4]
                     new_root[idx[0]][idx[1]][idx[2]].attrib["izz"] = gval[5]  
 
-                    # TODO: FIX - CHANGE VISUAL TOO
-
                 if tag == "contact_coefficients":
                     new_root[idx[0]][idx[1]][idx[2]].attrib["mu"] = gval
                 if tag == "box":
-                    new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"] = gval
-                print(gen_vals[idxx][i])
+                    new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"] = gval #collision
+                    new_root[idx[0]][0][idx[2]][idx[3]].attrib["size"] = gval #visual
+
             new_tree.write(self.save_directory + "/generated_" + str(i) + ".xml")
         print("Finished")
+        
 # run app
 root = tk.Tk()
 app = Application(master=root)
