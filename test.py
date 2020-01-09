@@ -318,11 +318,40 @@ class Application(tk.Frame):
             print("TEST")
             for idxx in range(0, len(idxs)):
                 idx = idxs[idxx]
+                val = gen_vals[idxx][i]
                 print(idx)
                 try:
+                    attrib = new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib
+                    tag = new_root[idx[0]][idx[1]][idx[2]][idx[3]].tag
                     print(new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib)
+                    print(new_root[idx[0]][idx[1]][idx[2]][idx[3]].tag)
                 except:
+                    print("EXCP")
+                    attrib = new_root[idx[0]][idx[1]][idx[2]].attrib
+                    tag = new_root[idx[0]][idx[1]][idx[2]].tag
                     print(new_root[idx[0]][idx[1]][idx[2]].attrib)
+                    print(new_root[idx[0]][idx[1]][idx[2]].tag)
+
+                # add in checks on selection here
+                gval = gen_vals[idxx][i]
+
+                if tag == "mass":
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["value"] = gval
+                if tag == "inertia":
+                    gval = gval.split()
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["ixx"] = gval[0]
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["ixy"] = gval[1]
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["ixz"] = gval[2]
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["iyy"] = gval[3]
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["iyz"] = gval[4]
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["izz"] = gval[5]  
+
+                    # TODO: FIX - CHANGE VISUAL TOO
+
+                if tag == "contact_coefficients":
+                    new_root[idx[0]][idx[1]][idx[2]].attrib["mu"] = gval
+                if tag == "box":
+                    new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"] = gval
                 print(gen_vals[idxx][i])
             new_tree.write(self.save_directory + "/generated_" + str(i) + ".xml")
         print("Finished")
