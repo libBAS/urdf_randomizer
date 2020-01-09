@@ -8,11 +8,21 @@ import numpy as np
 
 DEBUG  = True
 
-# class Elements:
-#     def __init__(self):
-#         self.idx = []
-#         self.string = ""
-#         self.vals = []
+class E:
+    # def __init__(self):
+    #     self.idx = []
+    #     self.string = ""
+    #     self.vals = []
+
+    # def __init__(self, idx, string, vals):
+    #     self.idx = idx
+    #     self.string = string
+    #     self.vals = vals
+
+    def __init__(self, idx, string):
+        self.idx = idx
+        self.string = string
+        self.vals = []
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -128,10 +138,14 @@ class Application(tk.Frame):
         self.num_generations = self.i_3.get()
         self.l_3_v.set("# of Generations: " + str(self.num_generations))
 
+    # class Elements:
+    #     def __init__(self):
+    #         self.idx = []
+    #         self.string = ""
+    #         self.vals = []
+
     def generate(self):
-        # Elist = []
-        idxs = []
-        strings = []
+        Elist = []
 
         # print(self.urdf_tree._element_tree)
         selected_i = self.lb.curselection()
@@ -169,20 +183,13 @@ class Application(tk.Frame):
                         for prop in link:
                             if prop.tag == "mass":
                                 print("MASS")
-                                idxs.append(list(idx))
-                                strings.append(root[idx[0]][idx[1]][idx[2]].attrib["value"])
+                                string = root[idx[0]][idx[1]][idx[2]].attrib["value"]
+                                Elist.append(E(idx, string))
                                 pass
                             if prop.tag == "inertia":
                                 print("INERTIA")
-                                idxs.append(list(idx))
-                                istring = \
-                                root[idx[0]][idx[1]][idx[2]].attrib["ixx"] + " " + \
-                                root[idx[0]][idx[1]][idx[2]].attrib["ixy"] + " " + \
-                                root[idx[0]][idx[1]][idx[2]].attrib["ixz"] + " " + \
-                                root[idx[0]][idx[1]][idx[2]].attrib["iyy"] + " " + \
-                                root[idx[0]][idx[1]][idx[2]].attrib["iyz"] + " " + \
-                                root[idx[0]][idx[1]][idx[2]].attrib["izz"] + " "
-                                strings.append(istring)
+                                string = root[idx[0]][idx[1]][idx[2]].attrib["ixx"] # FIX
+                                Elist.append(E(idx,string))
                                 pass
                             idx[2] += 1
                     if link.tag == "visual":
@@ -195,8 +202,8 @@ class Application(tk.Frame):
                             if prop.tag == "contact_coefficients":
                                 print("CONT COEF")
                                 print("Mu is " + str(prop.attrib["mu"]))
-                                idxs.append(list(idx))
-                                strings.append(root[idx[0]][idx[1]][idx[2]].attrib["mu"])
+                                string = root[idx[0]][idx[1]][idx[2]].attrib["mu"]
+                                Elist.append(E(idx,string))
                             if prop.tag == "geometry":
                                 print("GEOM")
                                 idx[3] = 0
@@ -204,8 +211,13 @@ class Application(tk.Frame):
                                     if value.tag == "box":
                                         print("BOX")
                                         pass
-                                    idxs.append(list(idx))
-                                    strings.append(root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"])
+                                    # print(value.tag)
+                                    # print(value.attrib)
+
+                                    # print(idx)
+                                    # print(root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"])
+                                    string = root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"]
+                                    Elist.append(E(idx,string))
 
                                     print()
 
@@ -215,11 +227,10 @@ class Application(tk.Frame):
                     idx[1] += 1
             idx[0] += 1
 
-        # print(len(Elist))
-        print(idxs)
-        for e in range(0, len(idxs)):
-            print(idxs[e])
-            print(strings[e])
+        print(len(Elist))
+        for e in Elist:
+            print(e.idx)
+            print(e.string)
             # print(e.vals)
 
         mean = 5
