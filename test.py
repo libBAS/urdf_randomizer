@@ -250,18 +250,6 @@ class Application(tk.Frame):
                     idx[1] += 1
             idx[0] += 1
 
-        # # debugging
-        # print(idxs)
-        # print("lengs")
-        # print(len(idxs))
-        # print(len(stringe))
-        # print(len(strings))
-        # for e in range(0, len(idxs)):
-        #     print(idxs[e])
-        #     print(strings[e])
-        #     print(stringe[e])
-            # print(e.vals)
-
         # generate random values
         
         gen_vals = []
@@ -290,16 +278,6 @@ class Application(tk.Frame):
                     full_string = full_string + " " + st
                 rvals.append(full_string)
             gen_vals.append(rvals)
-
-        # # debugging
-        print("E")
-        print(len(gen_vals))
-        # print(len(rvals))
-        # for de in gen_vals:
-        #     print(len(de))
-        #     for eee in de:
-        #         print(len(eee.split()))
-        # print(gen_vals)
 
         # save generated values to tree
         for i in range(int(self.num_generations)):
@@ -350,11 +328,11 @@ class Application(tk.Frame):
                     new_root[idx[0]][idx[1]][idx[2]].attrib["mu"] = gval
                 if tag == "box":
                     new_root[idx[0]][idx[1]][idx[2]][idx[3]].attrib["size"] = gval #collision
-                    new_root[idx[0]][0][idx[2]][idx[3]].attrib["size"] = gval #visual
+                    new_root[idx[0]][0][idx[2]][idx[3]].attrib["size"] = gval #visual - assumes above collision
 
             new_tree.write(self.save_directory + "/generated_" + str(i) + ".xml")
         print("Finished")
-        
+
 # run app
 root = tk.Tk()
 app = Application(master=root)
