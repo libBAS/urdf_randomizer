@@ -266,6 +266,10 @@ class Application(tk.Frame):
             for s in range(0, len(mean_s)):
                 mean = float(mean_s[s])
                 std = float(std_s[s])
+                
+                # THIS LINE MAKES STD BE IGNORED, INSTEAD USES 5%!!!
+                std = mean*0.05
+
                 rval_list = np.random.normal(mean,std,int(self.num_generations))
                 rval_s.append(rval_list)
 

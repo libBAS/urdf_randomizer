@@ -1,0 +1,92 @@
+<robot name="tumble">
+
+  <material name="white">
+    <color rgba="1 1 1 1" />
+  </material>
+
+  <material name="black">
+    <color rgba="0.2 0.2 0.2 1" />
+  </material>
+
+  <link name="torso">
+    <visual>
+      <geometry>
+        <box size=" 0.19312842488457627 0.14523089524727156 0.09237205428562949" />
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0.0 0" />
+      <material name="white" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size=" 0.19312842488457627 0.14523089524727156 0.09237205428562949" />
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0.0 0" />
+    </collision>
+    <inertial>
+      <mass value=" 0.7640235920276464" />
+      <inertia ixx="0.010403402749586517" ixy="0.0053671439649155" ixz="0.002083128763698839" iyy="0.006152103105721851" iyz="0.003056696151259286" izz="0.014451529708811382" />
+      <origin rpy="0 0 0" xyz="0 0.0 0" />
+    </inertial>
+  </link>
+
+  <link name="l_leg">
+    <visual>
+      <geometry>
+        <box size=" 0.12838943582857798 0.002966555168096499 0.007650671268711475" />
+      </geometry>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064" />
+      <material name="green" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size=" 0.12838943582857798 0.002966555168096499 0.007650671268711475" />
+      </geometry>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064" />
+      <contact_coefficients mu=" 0.8266256842533245" />
+    </collision>
+    <inertial>
+      <mass value=" 0.003886288599579647" />
+      <inertia ixx="2.2069361305001236e-05" ixy="3.8039266499785104e-07" ixz="2.3254054893543184e-08" iyy="1.0973314857318127e-07" iyz="9.820373168167953e-07" izz="2.1918035748357636e-05" />
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064" />
+    </inertial>
+  </link>
+
+  <link name="r_leg">
+    <visual>
+      <geometry>
+        <box size=" 0.1354866494756713 0.0031943208774962892 0.00756315771059203" />
+      </geometry>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064" />
+      <material name="black" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size=" 0.1354866494756713 0.0031943208774962892 0.00756315771059203" />
+      </geometry>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064" />
+      <contact_coefficients mu=" 0.7995022714604897" />
+    </collision>
+    <inertial>
+      <mass value=" 0.004050468029301086" />
+      <inertia ixx="2.086024206172566e-05" ixy="4.0097251106160256e-07" ixz="2.3205716158378378e-08" iyy="9.705498171500868e-08" iyz="1.066598157381999e-06" izz="2.165843638892406e-05" />
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064" />
+    </inertial>
+  </link>
+
+  <joint name="torso_l_leg" type="continuous">
+    <parent link="torso" />
+    <child link="l_leg" />
+    <axis xyz="-1 0 0" />
+    <limit effort="1000" velocity="100" />
+    <origin rpy="0 0 0" xyz="-0.1095 0.0 0" />
+  </joint>
+
+  <joint name="torso_r_leg" type="continuous">
+    <parent link="torso" />
+    <child link="r_leg" />
+    <axis xyz="1 0 0" />
+   <limit effort="1000" velocity="100" />
+   <origin rpy="0 0 0" xyz="0.1095 0.0 0" />
+  </joint>
+
+</robot>

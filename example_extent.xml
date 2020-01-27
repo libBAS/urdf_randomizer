@@ -12,20 +12,20 @@
   <link name="torso">
     <visual>
       <geometry>
-        <box size="0.1778 0.1143 0.060321"/>
+        <box size="0.2 0.14 0.085"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0.0 0"/>
       <material name="white"/>
     </visual>
     <collision>
       <geometry>
-        <box size="0.1778 0.1143 0.060321"/>
+        <box size="0.2 0.14 0.085"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0.0 0"/>
     </collision>
     <inertial>
-      <mass value="0.55"/>
-      <inertia ixx="0.00306223739085" ixy="0.00279434925" ixz="0.0014746976475" iyy="0.00646276822418" iyz="0.00094801991625" izz="0.00819084383333"/>
+      <mass value="0.7"/>
+      <inertia ixx="0.0110191" ixy="0.0049000" ixz="0.0020825" iyy="0.0062591" iyz="0.0029749" izz="0.0139066" />
       <origin rpy="0 0 0" xyz="0 0.0 0"/>
     </inertial>
   </link>
@@ -33,44 +33,44 @@
   <link name="l_leg">
     <visual>
       <geometry>
-        <box size="0.1516 0.00635 0.009525"/>
+        <box size="0.128 0.003 0.008"/>
       </geometry>
-      <origin rpy="0 1.5707963 0" xyz="0 0.02 0.05"/>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064"/>
       <material name="green"/>
     </visual>
     <collision>
       <geometry>
-        <box size="0.1516 0.00635 0.009525"/>
+        <box size="0.128 0.003 0.008"/>
       </geometry>
-      <origin rpy="0 1.5707963 0" xyz="0 0.02 0.05"/>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064"/>
       <contact_coefficients mu="0.8" />
     </collision>
     <inertial>
-      <mass value="0.0085"/>
-      <inertia ixx="3.71303020833e-07" ixy="2.0456525e-06" ixz="3.06847875e-06" iyy="6.53743092708e-05" iyz="1.2852796875e-07" izz="6.52315004167e-05"/>
-      <origin rpy="0 1.5707963 0" xyz="0 0.02 0.05"/>
+      <mass value="0.004"/>
+      <inertia ixx="2.1930666e-05" ixy="3.84e-07" ixz="2.4e-08" iyy="9.7333e-08" iyz="1.024e-06" izz="2.1857333e-05" />
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064"/>
     </inertial>
   </link>
 
   <link name="r_leg">
     <visual>
       <geometry>
-        <box size="0.1516 0.00635 0.009525"/>
+        <box size="0.128 0.003 0.008"/>
       </geometry>
-      <origin rpy="0 1.5707963 0" xyz="0 0.02 0.05"/>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064"/>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <box size="0.1516 0.00635 0.009525"/>
+        <box size="0.128 0.003 0.008"/>
       </geometry>
-      <origin rpy="0 1.5707963 0" xyz="0 0.02 0.05"/>
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064"/>
       <contact_coefficients mu="0.8" />
     </collision>
     <inertial>
-      <mass value="0.0085"/>
-      <inertia ixx="3.71303020833e-07" ixy="2.0456525e-06" ixz="3.06847875e-06" iyy="6.53743092708e-05" iyz="1.2852796875e-07" izz="6.52315004167e-05"/>
-      <origin rpy="0 1.5707963 0" xyz="0 0.02 0.05"/>
+      <mass value="0.004"/>
+      <inertia ixx="2.1930666e-05" ixy="3.84e-07" ixz="2.4e-08" iyy="9.7333e-08" iyz="1.024e-06" izz="2.1857333e-05" />
+      <origin rpy="0 1.5707963 0" xyz="0 0.0 0.064"/>
     </inertial>
   </link>
 
@@ -79,7 +79,7 @@
     <child link="l_leg"/>
     <axis xyz="-1 0 0"/>
     <limit effort="1000" velocity="100"/>
-    <origin rpy="0 0 0" xyz="-0.10795 0.0 0"/>
+    <origin rpy="0 0 0" xyz="-0.1095 0.0 0"/>
   </joint>
 
   <joint name="torso_r_leg" type="continuous">
@@ -87,7 +87,7 @@
     <child link="r_leg"/>
     <axis xyz="1 0 0"/>
    <limit effort="1000" velocity="100"/>
-   <origin rpy="0 0 0" xyz="0.10795 0.0 0"/>
+   <origin rpy="0 0 0" xyz="0.1095 0.0 0"/>
   </joint>
 
 </robot>
